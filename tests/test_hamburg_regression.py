@@ -49,6 +49,21 @@ def test_matches_hamburg_scenario_c(computed):
         np.testing.assert_allclose(m[f"{col}_got"], m[f"{col}_exp"], rtol=0, atol=1e-9, err_msg=col)
 
 
+def test_assess_spec_reproduces_hamburg(computed):
+    """The hazard-agnostic assess() with the paper's spec gives the same risks."""
+    b = gpd.read_file(GPKG, layer="buildings")
+    b["R"], b["R_G"] = b["RB"].astype(float), b["RBG"].astype(float)
+    spec = {"vulnerability": {"sensitivity": {"columns": ["C", "ES"], "weights": [0.3, 0.7]},
+                              "coping": {"columns": ["WR", "EDQ"], "weights": [0.5, 0.5]},
+                              "svi_weights": [0.5, 0.5], "threshold": 0.25, "exponent": 2.0},
+            "risks": {"PFRWB": {"exposure": "R_G", "hazard": "HWB"},
+                      "PFRMA": {"exposure": "R", "hazard": "HMA"}},
+            "classes": {"iterations": 3}}
+    out = pfr.assess(b, {"HWB": computed["HWB"], "HMA": computed["HMA"]}, spec)
+    for col in ["SVPF", "PFRWB", "PFRMA"]:
+        np.testing.assert_allclose(out[col], computed[col], rtol=0, atol=1e-12, err_msg=col)
+
+
 def test_classes_match_authors_37_of_37(computed):
     ref = gpd.read_file(GPKG, layer="results").drop(columns="geometry")
     ref["ID"] = ref["ID"].astype(int)

@@ -5,13 +5,20 @@ framework of Vogelbacher et al. (2026), *A high-resolution framework for urban p
 flood risk mapping*, Nat. Hazards Earth Syst. Sci. 26, 2765–2783,
 [doi:10.5194/nhess-26-2765-2026](https://doi.org/10.5194/nhess-26-2765-2026).
 
-Risk = social vulnerability × exposure × hazard, per building:
+Risk = social vulnerability × exposure × hazard, per building. The core is
+**hazard-agnostic**; each hazard is a module. Pluvial flooding is the first; the paper
+notes the framework "can be adapted to other hazards, such as heat" — a heat module
+plugs into the same core.
 
 | Module | What it computes |
 |---|---|
-| `vulnerability` | TOPSIS with Shannon entropy for sensitivity, coping capacity and their combination; flood-sensitivity transformation SV_PF |
-| `hazard` | hazard to well-being (flooded fraction of a ring around each building, 30–100 cm) and to mobility (ring + street area within 15 and 30 m, at 30 cm); rings exclude every building footprint |
-| `risk` | PFR = SV_PF × E × H; the authors' iterated-mean risk classes |
+| `core.vulnerability` | TOPSIS with Shannon entropy for sensitivity, coping capacity and their combination, for any indicators and weights; hazard-sensitivity transformation (the paper's SV_PF) |
+| `core.exposure` | people per building from a coarser unit (e.g. census section), by dwellings or living area; people on the ground / top / all floors, with an eligibility rule (e.g. mixed use) |
+| `core.zonal` | rings around footprints that exclude every building footprint; bands; clipping; covered fractions |
+| `core.response` | response functions: the paper's log-normal CDF; threshold exceedance |
+| `core.risk` | risk = SV × E × H; the authors' iterated-mean risk classes |
+| `core.assess` | everything above from one spec (a dict, e.g. kept as YAML), for any number of risks |
+| `hazards.pluvial` | hazard to well-being (flooded fraction of a ring around each building, 30–100 cm) and to mobility (ring + street area within 15 and 30 m, at 30 cm) |
 
 The code was written from the paper and the authors' exported scripts, in the Hamburg
 reproduction [annefou/hamburg-pluvial-flood-replication](https://github.com/annefou/hamburg-pluvial-flood-replication)
@@ -36,7 +43,16 @@ pixi run test
 
 The regression test (`tests/test_hamburg_regression.py`) re-runs the authors'
 37-building example and requires every index to match the Hamburg reproduction to
-1e-9 and all 37 risk classes to match the authors' own.
+1e-9 and all 37 risk classes to match the authors' own — both step by step and through
+`assess()` with the paper's spec.
+
+## Adding a hazard
+
+A hazard module turns hazard data into one 0–1 (or summed) index per building, using
+`core.zonal` for the zones around buildings and `core.response` for the response. Then
+`assess()` combines it with vulnerability and exposure: pass the hazard's own
+vulnerability indicators and weights, and the exposure column that hazard affects (e.g.
+ground-floor residents for flooding, top-floor residents for heat).
 
 ## Test data
 
