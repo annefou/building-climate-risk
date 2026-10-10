@@ -1,0 +1,39 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it, and the paper it implements."
+title: "pfr-building-risk: building-level urban pluvial flood risk"
+type: software
+authors:
+  - family-names: Fouilloux
+    given-names: Anne
+    orcid: "https://orcid.org/0000-0002-1784-2920"
+    affiliation: "LifeWatch ERIC"
+license: MIT
+repository-code: "https://github.com/annefou/pfr-building-risk"
+version: "0.0.0.dev0"
+references:
+  - type: article
+    title: "A high-resolution framework for urban pluvial flood risk mapping"
+    authors:
+      - family-names: Vogelbacher
+        given-names: Anastasia
+      - family-names: von Szombathely
+        given-names: Malte
+      - family-names: Lennartz
+        given-names: Marc
+      - family-names: Poschlod
+        given-names: Benjamin
+      - family-names: Sillmann
+        given-names: Jana
+    journal: "Natural Hazards and Earth System Sciences"
+    volume: 26
+    start: 2765
+    end: 2783
+    year: 2026
+    doi: "10.5194/nhess-26-2765-2026"
+  - type: software
+    title: "Hamburg pluvial flood risk reproduction"
+    authors:
+      - family-names: Fouilloux
+        given-names: Anne
+    version: "0.1.1"
+    doi: "10.5281/zenodo.23270558"

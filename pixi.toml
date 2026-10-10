@@ -1,0 +1,20 @@
+[workspace]
+name = "pfr-building-risk"
+channels = ["conda-forge"]
+platforms = ["linux-64", "osx-arm64", "win-64"]
+
+[dependencies]
+python = "3.12.*"
+numpy = "*"
+pandas = "*"
+geopandas = ">=1.0"
+shapely = ">=2.0"
+scipy = "*"
+pyogrio = "*"
+pytest = "*"
+
+[pypi-dependencies]
+pfr-building-risk = { path = ".", editable = true }
+
+[tasks]
+test = "pytest -q"
