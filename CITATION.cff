@@ -16,6 +16,9 @@ identifiers:
   - type: doi
     value: "10.5281/zenodo.23282971"
     description: "Version DOI (v0.2.0)"
+  - type: doi
+    value: "10.5281/zenodo.23285504"
+    description: "Version DOI (v0.2.1)"
 repository-code: "https://github.com/annefou/building-climate-risk"
 version: "0.2.1"
 date-released: "2026-10-10"
