@@ -51,3 +51,38 @@ def test_iterated_means_and_classes():
     # Right-closed breaks: a value equal to a break stays in the lower class.
     assert bcr.risk_class(v, breaks).tolist() == [0, 1, 1, 1, 2, 3]
     assert bcr.risk_class([11], breaks).tolist() == [4]
+
+
+def _city_wide_polygon() -> gpd.GeoSeries:
+    """One jagged polygon with many thousands of vertices, like a city's street network."""
+    t = np.linspace(0, 2 * np.pi, 6000, endpoint=False)
+    r = 400 + 40 * np.sin(37 * t) + 15 * np.cos(91 * t)
+    ring = np.column_stack([500 + r * np.cos(t), 500 + r * np.sin(t)])
+    return gpd.GeoSeries([shapely.Polygon(ring)], crs="EPSG:25830")
+
+
+def test_tile_preserves_area():
+    g = _city_wide_polygon().iloc[0]
+    pieces = bcr.tile(g, 100.0)
+    assert len(pieces) > 1
+    assert np.isclose(shapely.area(pieces).sum(), g.area, rtol=1e-12)
+
+
+def test_split_large_leaves_small_geometries_alone():
+    small = _grid(2)
+    assert bcr.split_large(small).equals(small)
+
+
+def test_tiled_overlays_equal_untiled(monkeypatch):
+    from building_climate_risk.core import zonal
+    cover = _city_wide_polygon()
+    assert shapely.get_num_coordinates(cover.values)[0] > zonal.MAX_VERTICES   # tiling applies
+    zones = gpd.GeoSeries([shapely.Point(x, y).buffer(30) for x in range(100, 900, 70)
+                           for y in range(100, 900, 70)], crs=cover.crs)
+    tiled_frac = bcr.covered_fraction(zones, cover)
+    tiled_clip = bcr.clip_to(zones, cover).area.values
+    monkeypatch.setattr(zonal, "MAX_VERTICES", 10 ** 9)          # disable tiling
+    plain_frac = bcr.covered_fraction(zones, cover)
+    plain_clip = bcr.clip_to(zones, cover).area.values
+    assert np.allclose(tiled_frac, plain_frac, rtol=0, atol=1e-9)
+    assert np.allclose(tiled_clip, plain_clip, rtol=0, atol=1e-6)

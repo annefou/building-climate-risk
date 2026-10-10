@@ -10,7 +10,7 @@ from .core.exposure import allocate, residents_on_floor
 from .core.response import exceedance, lognormal_cdf
 from .core.risk import CLASS_NAMES, iterated_means, risk, risk_class
 from .core.vulnerability import flood_sensitivity, sensitivity_transform, social_vulnerability, topsis
-from .core.zonal import annulus, clip_to, covered_fraction, rings_without_buildings
+from .core.zonal import annulus, clip_to, covered_fraction, quarter, rings_without_buildings, split_large, tile
 from .hazards.pluvial import flooded_fraction, hazard_mobility, hazard_wellbeing, mobility_fractions
 
-__version__ = "0.2.0"
+__version__ = "0.2.1"

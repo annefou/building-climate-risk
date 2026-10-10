@@ -17,7 +17,7 @@ plugs into the same core.
 |---|---|
 | `core.vulnerability` | TOPSIS with Shannon entropy for sensitivity, coping capacity and their combination, for any indicators and weights; hazard-sensitivity transformation (the paper's SV_PF) |
 | `core.exposure` | people per building from a coarser unit (e.g. census section), by dwellings or living area; people on the ground / top / all floors, with an eligibility rule (e.g. mixed use) |
-| `core.zonal` | rings around footprints that exclude every building footprint; bands; clipping; covered fractions |
+| `core.zonal` | rings around footprints that exclude every building footprint; bands; clipping; covered fractions; automatic splitting of city-wide polygons (`split_large`, `quarter`) |
 | `core.response` | response functions: the paper's log-normal CDF; threshold exceedance |
 | `core.risk` | risk = SV × E × H; the authors' iterated-mean risk classes |
 | `core.assess` | everything above from one spec (a dict, e.g. kept as YAML), for any number of risks |
@@ -35,6 +35,18 @@ three iterations for the classes.
 Distances are in the units of the input CRS — use a projected CRS in ground metres.
 Ring and flood overlays are local (each ring meets only the footprints and flood
 polygons that touch it), so the code scales from a city quarter to a whole city.
+Polygons with more than 2,000 vertices — a whole street network, flood extent or water
+body — are first split into quadrants, recursively (`split_large`), so each zone meets
+only small pieces. The pieces cover the original exactly, so results are unchanged; on
+Logroño's street network (one polygon) the ring overlays become ~55× faster.
+
+## Changes
+
+- **0.2.1** — automatic splitting of city-wide polygons before overlays (`split_large`,
+  `quarter`, `tile`); results unchanged (tested against untiled overlays and the Hamburg
+  regression).
+- **0.2.0** — hazard-agnostic core and hazard modules; renamed from `pfr-building-risk`.
+- **0.1.0** — first tested release (flood only).
 
 ## Install and test
 
