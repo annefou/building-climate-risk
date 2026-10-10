@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it, and the paper it implements."
-title: "pfr-building-risk: building-level urban pluvial flood risk"
+title: "building-climate-risk: building-level climate risk (flood, and other hazards)"
 type: software
 authors:
   - family-names: Fouilloux
@@ -8,8 +8,8 @@ authors:
     orcid: "https://orcid.org/0000-0002-1784-2920"
     affiliation: "LifeWatch ERIC"
 license: MIT
-repository-code: "https://github.com/annefou/pfr-building-risk"
-version: "0.1.0"
+repository-code: "https://github.com/annefou/building-climate-risk"
+version: "0.2.0"
 date-released: "2026-10-10"
 references:
   - type: article

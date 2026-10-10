@@ -1,23 +1,23 @@
 import numpy as np
 import pandas as pd
 
-import pfr_building_risk as pfr
-from pfr_building_risk.core.assess import assess
+import building_climate_risk as bcr
+from building_climate_risk.core.assess import assess
 
 
 def test_allocate_by_weight():
     units = pd.Series({"A": 100.0, "B": 30.0})
     unit_of = pd.Series(["A", "A", "B", "B", None])
     weight = pd.Series([1, 3, 0, 2, 5])
-    got = pfr.allocate(units, unit_of, weight)
+    got = bcr.allocate(units, unit_of, weight)
     assert got.tolist() == [25.0, 75.0, 0.0, 30.0, 0.0]
 
 
 def test_residents_on_floor_rules():
     r, f = [10.0, 10.0, 10.0], [2, 5, 0]
-    assert pfr.residents_on_floor(r, f).tolist() == [5.0, 2.0, 10.0]          # floors < 1 -> 1
-    assert pfr.residents_on_floor(r, f, eligible=[True, False, True]).tolist() == [5.0, 0.0, 10.0]
-    assert pfr.residents_on_floor(r, f, floor="all").tolist() == r
+    assert bcr.residents_on_floor(r, f).tolist() == [5.0, 2.0, 10.0]          # floors < 1 -> 1
+    assert bcr.residents_on_floor(r, f, eligible=[True, False, True]).tolist() == [5.0, 0.0, 10.0]
+    assert bcr.residents_on_floor(r, f, floor="all").tolist() == r
 
 
 def test_assess_matches_the_step_by_step_api():
@@ -30,7 +30,7 @@ def test_assess_matches_the_step_by_step_api():
             "risks": {"PFRWB": {"exposure": "R_G", "hazard": "HWB"},
                       "PFRMA": {"exposure": "R", "hazard": "HMA"}}}
     out = assess(b, h, spec)
-    sv = pfr.social_vulnerability(b)
+    sv = bcr.social_vulnerability(b)
     assert np.allclose(out["SVPF"], sv["SVPF"])
     assert np.allclose(out["PFRWB"], sv["SVPF"] * b["R_G"] * h["HWB"])
-    assert out["PFRMA_class"].tolist() == pfr.risk_class(out["PFRMA"], pfr.iterated_means(out["PFRMA"])).tolist()
+    assert out["PFRMA_class"].tolist() == bcr.risk_class(out["PFRMA"], bcr.iterated_means(out["PFRMA"])).tolist()

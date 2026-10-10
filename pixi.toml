@@ -1,5 +1,5 @@
 [workspace]
-name = "pfr-building-risk"
+name = "building-climate-risk"
 channels = ["conda-forge"]
 platforms = ["linux-64", "osx-arm64", "win-64"]
 
@@ -14,7 +14,7 @@ pyogrio = "*"
 pytest = "*"
 
 [pypi-dependencies]
-pfr-building-risk = { path = ".", editable = true }
+building-climate-risk = { path = ".", editable = true }
 
 [tasks]
 test = "pytest -q"

@@ -16,7 +16,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-import pfr_building_risk as pfr
+import building_climate_risk as bcr
 
 DATA = Path(__file__).parent / "data"
 GPKG = DATA / "hamburg_example_v2.gpkg"
@@ -31,13 +31,13 @@ def computed() -> pd.DataFrame:
     floods = {d: gpd.read_file(GPKG, layer=f"flood_{d}").to_crs(CRS).geometry for d in DEPTHS}
     streets = gpd.read_file(GPKG, layer="streets").to_crs(CRS).geometry
 
-    out = pfr.social_vulnerability(b)
+    out = bcr.social_vulnerability(b)
     out["ID"] = b["ID"].values
     out["R"], out["R_G"] = b["RB"].astype(float).values, b["RBG"].astype(float).values
-    out["HWB"] = pfr.hazard_wellbeing(b.geometry, floods, buffer=2)
-    out["HMA"] = pfr.hazard_mobility(pfr.mobility_fractions(b.geometry, floods[30], streets))
-    out["PFRMA"] = pfr.risk(out["SVPF"], out["R"], out["HMA"])
-    out["PFRWB"] = pfr.risk(out["SVPF"], out["R_G"], out["HWB"])
+    out["HWB"] = bcr.hazard_wellbeing(b.geometry, floods, buffer=2)
+    out["HMA"] = bcr.hazard_mobility(bcr.mobility_fractions(b.geometry, floods[30], streets))
+    out["PFRMA"] = bcr.risk(out["SVPF"], out["R"], out["HMA"])
+    out["PFRWB"] = bcr.risk(out["SVPF"], out["R_G"], out["HWB"])
     return out
 
 
@@ -59,7 +59,7 @@ def test_assess_spec_reproduces_hamburg(computed):
             "risks": {"PFRWB": {"exposure": "R_G", "hazard": "HWB"},
                       "PFRMA": {"exposure": "R", "hazard": "HMA"}},
             "classes": {"iterations": 3}}
-    out = pfr.assess(b, {"HWB": computed["HWB"], "HMA": computed["HMA"]}, spec)
+    out = bcr.assess(b, {"HWB": computed["HWB"], "HMA": computed["HMA"]}, spec)
     for col in ["SVPF", "PFRWB", "PFRMA"]:
         np.testing.assert_allclose(out[col], computed[col], rtol=0, atol=1e-12, err_msg=col)
 
@@ -69,6 +69,6 @@ def test_classes_match_authors_37_of_37(computed):
     ref["ID"] = ref["ID"].astype(int)
     m = ref.merge(computed, on="ID")
     for ours, theirs in [("PFRWB", "PFR_WB"), ("PFRMA", "PFR_MA")]:
-        got = pfr.risk_class(m[ours], pfr.iterated_means(m[ours]))
-        authors = pfr.risk_class(m[theirs], pfr.iterated_means(m[theirs]))
+        got = bcr.risk_class(m[ours], bcr.iterated_means(m[ours]))
+        authors = bcr.risk_class(m[theirs], bcr.iterated_means(m[theirs]))
         assert (got == authors).sum() == 37, ours

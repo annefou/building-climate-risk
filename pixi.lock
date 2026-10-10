@@ -6682,7 +6682,7 @@ packages:
   size: 387535
   timestamp: 1786599623274
 - pypi: ./
-  name: pfr-building-risk
+  name: building-climate-risk
   requires_dist:
   - geopandas>=1.0
   - numpy

@@ -1,9 +1,10 @@
-# pfr-building-risk
+# building-climate-risk
 
-An open, tested Python implementation of the building-level urban pluvial flood risk
-framework of Vogelbacher et al. (2026), *A high-resolution framework for urban pluvial
-flood risk mapping*, Nat. Hazards Earth Syst. Sci. 26, 2765–2783,
+Building-level climate risk in Python, following the IPCC risk concept as made
+operational for cities by Vogelbacher et al. (2026), *A high-resolution framework for
+urban pluvial flood risk mapping*, Nat. Hazards Earth Syst. Sci. 26, 2765–2783,
 [doi:10.5194/nhess-26-2765-2026](https://doi.org/10.5194/nhess-26-2765-2026).
+Open and tested: it reproduces the authors' worked example (see Install and test).
 
 Risk = social vulnerability × exposure × hazard, per building. The core is
 **hazard-agnostic**; each hazard is a module. Pluvial flooding is the first; the paper
@@ -35,8 +36,10 @@ polygons that touch it), so the code scales from a city quarter to a whole city.
 
 ## Install and test
 
+(v0.1.0 was released as `pfr-building-risk`, flood only; the GitHub URL redirects.)
+
 ```bash
-pip install git+https://github.com/annefou/pfr-building-risk@<tag>
+pip install git+https://github.com/annefou/building-climate-risk@<tag>
 # or, for development:
 pixi run test
 ```

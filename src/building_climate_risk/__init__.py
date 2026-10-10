@@ -13,4 +13,4 @@ from .core.vulnerability import flood_sensitivity, sensitivity_transform, social
 from .core.zonal import annulus, clip_to, covered_fraction, rings_without_buildings
 from .hazards.pluvial import flooded_fraction, hazard_mobility, hazard_wellbeing, mobility_fractions
 
-__version__ = "0.2.0.dev0"
+__version__ = "0.2.0"
