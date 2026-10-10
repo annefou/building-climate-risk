@@ -8,6 +8,14 @@ authors:
     orcid: "https://orcid.org/0000-0002-1784-2920"
     affiliation: "LifeWatch ERIC"
 license: MIT
+doi: "10.5281/zenodo.23282970"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.23282970"
+    description: "Concept DOI (all versions)"
+  - type: doi
+    value: "10.5281/zenodo.23282971"
+    description: "Version DOI (v0.2.0)"
 repository-code: "https://github.com/annefou/building-climate-risk"
 version: "0.2.0"
 date-released: "2026-10-10"

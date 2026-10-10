@@ -1,5 +1,7 @@
 # building-climate-risk
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23282970.svg)](https://doi.org/10.5281/zenodo.23282970)
+
 Building-level climate risk in Python, following the IPCC risk concept as made
 operational for cities by Vogelbacher et al. (2026), *A high-resolution framework for
 urban pluvial flood risk mapping*, Nat. Hazards Earth Syst. Sci. 26, 2765–2783,
