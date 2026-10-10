@@ -9,7 +9,8 @@ authors:
     affiliation: "LifeWatch ERIC"
 license: MIT
 repository-code: "https://github.com/annefou/pfr-building-risk"
-version: "0.0.0.dev0"
+version: "0.1.0"
+date-released: "2026-10-10"
 references:
   - type: article
     title: "A high-resolution framework for urban pluvial flood risk mapping"

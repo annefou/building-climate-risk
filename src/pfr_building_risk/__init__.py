@@ -5,4 +5,4 @@ from .hazard import (clip_to, flooded_fraction, hazard_mobility, hazard_wellbein
 from .risk import CLASS_NAMES, iterated_means, risk, risk_class
 from .vulnerability import flood_sensitivity, social_vulnerability, topsis
 
-__version__ = "0.0.0.dev0"
+__version__ = "0.1.0"
