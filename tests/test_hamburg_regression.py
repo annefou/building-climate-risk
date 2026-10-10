@@ -72,3 +72,20 @@ def test_classes_match_authors_37_of_37(computed):
         got = bcr.risk_class(m[ours], bcr.iterated_means(m[ours]))
         authors = bcr.risk_class(m[theirs], bcr.iterated_means(m[theirs]))
         assert (got == authors).sum() == 37, ours
+
+
+def test_values_match_authors_arcgis_output(computed):
+    """Against the authors' own published output layer (not only our earlier port):
+    social vulnerability is exact; hazard and risk agree to the third/fourth decimal, the
+    residual being ArcGIS geometry processing (snapping tolerance, true curves)."""
+    ref = gpd.read_file(GPKG, layer="results").drop(columns="geometry")
+    ref["ID"] = ref["ID"].astype(int)
+    m = ref.merge(computed.add_prefix("got_").rename(columns={"got_ID": "ID"}), on="ID")
+    assert len(m) == 37
+    tolerances = {("Sen", "Sensitivity"): 1e-12, ("CCap", "CopingCapacity"): 1e-12,
+                  ("SV", "SVI"): 1e-12, ("SV_PF", "SVPF"): 1e-12,
+                  ("HWB", "HWB"): 2e-3, ("HMA", "HMA"): 1e-3,
+                  ("PFR_WB", "PFRWB"): 5e-3, ("PFR_MA", "PFRMA"): 2e-2}
+    for (theirs, ours), tol in tolerances.items():
+        np.testing.assert_allclose(m[f"got_{ours}"], m[theirs].astype(float), rtol=0, atol=tol,
+                                   err_msg=f"{ours} vs authors' {theirs}")

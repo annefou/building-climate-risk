@@ -61,7 +61,9 @@ pixi run test
 The regression test (`tests/test_hamburg_regression.py`) re-runs the authors'
 37-building example and requires every index to match the Hamburg reproduction to
 1e-9 and all 37 risk classes to match the authors' own — both step by step and through
-`assess()` with the paper's spec.
+`assess()` with the paper's spec — and compares every index with the authors' ArcGIS output:
+social vulnerability exactly, hazard and risk to the third/fourth decimal (ArcGIS geometry
+processing).
 
 ## Adding a hazard
 
